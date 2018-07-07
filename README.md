@@ -16,7 +16,7 @@ The most important part of this naming scheme is the last instance of ' - ' plus
 period before the file extension. Whatever is between the last instance of ' - ' and the period will
 be the episode name, minus any leading or trailing white spaces.
 
-I use this to populate the metadata fields inside [Plex](https://www.plex.tv/) when using a personal media show library, having the embedded title tags set allows [Plex](https://www.plex.tv/) to pull that data instead of having to manually rename each file's episode name from within [Plex](https://www.plex.tv/).
+I use this to populate the metadata fields inside [Plex](https://www.plex.tv/) when using a [personal media library with embedded metadata](https://support.plex.tv/articles/200265256-naming-home-series-media/). Having the title tags set allows [Plex](https://www.plex.tv/) to pull that data instead of having to manually rename each file's episode name from within [Plex](https://www.plex.tv/).
 
 ---
 
