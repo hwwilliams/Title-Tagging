@@ -4,14 +4,14 @@ from os import getcwd, walk
 from os.path import isdir, join
 from sys import exit
 
-## Run the script with '--help' to see more information. ##
+# Run the script with '--help' to see more information.
 
 def arguments():
     parser = ArgumentParser(description='''
 A script to embed title tags in video files.
 
 Dependencies: Python 3, Mutagen
-Install Mutagen: 'pip install mutagen'
+Install Mutagen by running 'pip install mutagen'
 
 This script relies on files being named in fairly specific and uniform fashion.
 It will attempt to extract an episode name and embed that into the file's title tag.
@@ -35,12 +35,12 @@ Extracted title tag: Why Learn Python?
 
 def check_path(prompt):
     while True:
-        input_dir = str(input(prompt)).strip()
-        if input_dir.startswith('.\\'):
-            input_dir = input_dir.replace('.\\', '', 1)
-        global search_dir
-        search_dir = join((getcwd()), input_dir)
-        if isdir(search_dir):
+        input_directory = str(input(prompt)).strip()
+        if input_directory.startswith('.\\'):
+            input_directory = input_directory.replace('.\\', '', 1)
+        global search_directory
+        search_directory = join((getcwd()), input_directory)
+        if isdir(search_directory):
             break
         else:
             print('Invalid Directory Path: Please enter a valid directory path.')
@@ -60,7 +60,7 @@ def confirm_save(prompt):
 
 def fetch_titles(dictionary):
     for file, root in dictionary.items():
-        file_path_titles[(join(root, file))] = ((file.split('-'))[-1])[0:-((len(((file.split('.'))[-1]).strip())+1))].strip()
+        file_path_titles[(join(root, file))] = ((file.split(' - '))[-1])[0:-((len(((file.split('.'))[-1]).strip())+1))].strip()
 
 def list_files_titles(dictionary):
     for file_path, file_title in dictionary.items():
@@ -68,7 +68,7 @@ def list_files_titles(dictionary):
 
 def main():
     check_path('Which directory would you like to search (recursively)? ')
-    if walk_the_path(search_dir):
+    if walk_the_path(search_directory):
         fetch_titles(path_walked)
         list_files_titles(file_path_titles)
         if confirm_save('Would you like to update the file(s) as shown above (Y/n)? '):
