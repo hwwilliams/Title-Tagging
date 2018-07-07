@@ -8,7 +8,7 @@ from sys import exit
 
 def arguments():
     parser = ArgumentParser(description='''
-A script to embed title tags in MP4 files.
+A script to embed title tags in video files.
 
 Dependencies: Python 3, Mutagen
 Install Mutagen: 'pip install mutagen'
