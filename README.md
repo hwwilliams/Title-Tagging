@@ -1,5 +1,5 @@
 # Title-Tagging
-## A script to embed title tags in video files.
+A script to embed title tags in video files.
 
 **Dependencies:** Python 3, [Mutagen](https://github.com/quodlibet/mutagen).
 
