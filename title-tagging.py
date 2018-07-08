@@ -76,7 +76,7 @@ def main():
             verify_title(mapped_title)
             print('File(s) updated with new title tag(s).')
     else:
-        print(f'No files found when searching for files ending with ".{extention_limit}".')
+        print(f'No files found when searching for files ending with ".{extension_limit}".')
     terminate()
 
 def terminate():
