@@ -2,6 +2,7 @@ from argparse import ArgumentParser, RawTextHelpFormatter
 from mutagen.mp4 import MP4
 from os import getcwd, walk
 from os.path import isdir, join
+from progress.bar import Bar
 from sys import exit
 
 # Run the script with '--help' to see more information.
@@ -10,8 +11,9 @@ def arguments():
     parser = ArgumentParser(description='''
 A script to embed title tags in video files.
 
-Dependencies: Python 3, Mutagen
+Dependencies: Python 3, Mutagen, and Progress
 Install Mutagen by running 'pip install mutagen'
+Install Mutagen by running 'pip install progress'
 
 This script relies on files being named in fairly specific and uniform fashion.
 It will attempt to extract an episode name and embed that into the file's title tag.
@@ -72,12 +74,17 @@ def main():
         fetch_titles(path_walked)
         list_files_titles(file_path_titles)
         if confirm_save('Would you like to update the file(s) as shown above (Y/n)? '):
-            update_title(file_path_titles)
-            verify_title(mapped_title)
-            print('File(s) updated with new title tag(s).')
+            progress(file_path_titles)
     else:
         print(f'No files found when searching for files ending with ".{extension_limit}".')
     terminate()
+
+def progress(dictionary):
+    bar = Bar('Processing', max=20, suffix='%(index)d/%(max)d - %(percent).1f%% - %(eta)ds')
+    for i in range(20):
+        update_title(dictionary)
+        bar.next()
+    bar.finish()
 
 def terminate():
     print('Exiting script.')
@@ -88,7 +95,6 @@ def update_title(dictionary):
         video_file = MP4(file_path)
         video_file['©nam'] = [file_title]
         video_file.save()
-        mapped_title[file_title] = video_file.get(key='©nam')
 
 def valid_extension(prompt):
     valid_extension_list = ['mp4']
@@ -100,13 +106,6 @@ def valid_extension(prompt):
         else:
             print(f'Invalid Input: Please enter one of the following supported extensions {valid_extension_list}.')
             continue
-
-def verify_title(dictionary):
-    for file_title, video_file_key in dictionary.items():
-        if not file_title in video_file_key:
-            print('Error: File(s) not successfully updated.')
-            print(f'File {file_title} was not set with the new title.')
-            terminate()
 
 def walk_the_path(directory):
     valid_extension('What file extension would you like to use to narrow the search? ')
