@@ -35,6 +35,8 @@ def list_files_titles(dictionary):
         print(f'The title for "{file_path}" would be "{file_title}".')
 
 def main():
+    file_path_titles = {}
+    path_walked = {}
     check_path('Which directory would you like to search (recursively)? ')
     if walk_the_path(search_directory):
         fetch_titles(path_walked)
@@ -91,6 +93,4 @@ def walk_the_path(valid_directory_path):
         return True
 
 if __name__ == '__main__':
-    file_path_titles = {}
-    path_walked = {}
     main()
