@@ -1,8 +1,6 @@
-from os.path import join
-
 def check_path(directory_path):
     from os import getcwd
-    from os.path import isdir
+    from os.path import isdir, join
     while True:
         input_directory = str(input(directory_path)).strip()
         if input_directory.startswith('.\\'):
@@ -28,6 +26,7 @@ def confirm_save(confirmation):
             print('Invalid Input: Please enter yes or no.')
 
 def fetch_titles(dictionary):
+    from os.path import join
     for file, root in dictionary.items():
         file_path_titles[(join(root, file))] = ((file.split(' - '))[-1])[0:-((len(((file.split('.'))[-1]).strip())+1))].strip()
 
