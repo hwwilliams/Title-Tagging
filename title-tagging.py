@@ -41,7 +41,6 @@ def main():
         fetch_titles(path_walked)
         list_files_titles(file_path_titles)
         if confirm_save('Would you like to update the file(s) as shown above (Y/n)? '):
-            #update_title(file_path_titles)
             update_title_progress(file_path_titles)
     else:
         print(f'No files found when searching for files ending with ".{extension_limit}".')
