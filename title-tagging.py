@@ -1,43 +1,10 @@
-from argparse import ArgumentParser, RawTextHelpFormatter
-from mutagen.mp4 import MP4
-from os import getcwd, walk
-from os.path import isdir, join
-from progress.bar import Bar
-from sys import exit
+from os.path import join
 
-# Run the script with '--help' to see more information.
-
-def arguments():
-    parser = ArgumentParser(description='''
-A script to embed title tags in video files.
-
-Dependencies: Python 3, Mutagen, and Progress
-Install Mutagen by running 'pip install mutagen'
-Install Mutagen by running 'pip install progress'
-
-This script relies on files being named in fairly specific and uniform fashion.
-It will attempt to extract an episode name and embed that into the file's title tag.
-A valid file would look similar to 'Python 3 Tutorial for Beginners - S01E01 - Why Learn Python?.mp4'.
-
-The most important part of this naming scheme is the last instance of '-' plus the
-period before the file extension. Whatever is between the last instance of '-' and the period will
-be the episode name, minus any leading or trailing white spaces.
-
-An example is below:
-Full file name: Python 3 Tutorial for Beginners - S01E01 - Why Learn Python?.mp4
-Extracted title tag: Why Learn Python?
-    ''', formatter_class=RawTextHelpFormatter)
-    # parser.add_argument('-d','--directory',
-    #                     help='The path to search for all files that would be updated. This path is searched recursively.')
-    # parser.add_argument('-e','--extension-limit',
-    #                     help='Search the directory for files ending with this extension.')
-    # parser.add_argument('-s','--save', action="store_true"
-    #                     help='Force save results.')
-    args = parser.parse_args()
-
-def check_path(prompt):
+def check_path(directory_path):
+    from os import getcwd
+    from os.path import isdir
     while True:
-        input_directory = str(input(prompt)).strip()
+        input_directory = str(input(directory_path)).strip()
         if input_directory.startswith('.\\'):
             input_directory = input_directory.replace('.\\', '', 1)
         global search_directory
@@ -48,15 +15,15 @@ def check_path(prompt):
             print('Invalid Directory Path: Please enter a valid directory path.')
             continue
 
-def confirm_save(prompt):
+def confirm_save(confirmation):
     while True:
-        confirm = (str(input(prompt)).strip()).lower()
-        if confirm == '' or confirm.startswith('y'):
-            confirm = 'yes'
-        elif confirm.startswith('n'):
-            confirm = 'no'
+        answer = (str(input(confirmation)).strip()).lower()
+        if answer == '' or answer.startswith('y'):
+            answer = 'yes'
+        elif answer.startswith('n'):
+            answer = 'no'
         try:
-            return {'yes':True,'no':False}[confirm]
+            return {'yes':True,'no':False}[answer]
         except KeyError:
             print('Invalid Input: Please enter yes or no.')
 
@@ -74,42 +41,49 @@ def main():
         fetch_titles(path_walked)
         list_files_titles(file_path_titles)
         if confirm_save('Would you like to update the file(s) as shown above (Y/n)? '):
-            progress(file_path_titles)
+            #update_title(file_path_titles)
+            update_title_progress(file_path_titles)
     else:
         print(f'No files found when searching for files ending with ".{extension_limit}".')
     terminate()
 
-def progress(dictionary):
-    bar = Bar('Processing', max=20, suffix='%(index)d/%(max)d - %(percent).1f%% - %(eta)ds')
-    for i in range(20):
-        update_title(dictionary)
-        bar.next()
-    bar.finish()
-
 def terminate():
+    from sys import exit
     print('Exiting script.')
     exit()
 
 def update_title(dictionary):
+    from mutagen.mp4 import MP4
     for file_path, file_title in dictionary.items():
         video_file = MP4(file_path)
         video_file['©nam'] = [file_title]
         video_file.save()
 
-def valid_extension(prompt):
+def update_title_progress(dictionary):
+    from progress.bar import FillingSquaresBar
+    count = int(len(dictionary.items()))
+    bar = FillingSquaresBar('Processing', max=count, suffix='%(index)d/%(max)d - %(percent).1f%%')
+    for i in range(count):
+        update_title(dictionary)
+        count -= 1
+        bar.next()
+    bar.finish()
+
+def valid_extension(extension):
     valid_extension_list = ['mp4']
     while True:
         global extension_limit
-        extension_limit = str(input(prompt)).strip()
+        extension_limit = str(input(extension)).strip()
         if extension_limit in valid_extension_list:
             break
         else:
             print(f'Invalid Input: Please enter one of the following supported extensions {valid_extension_list}.')
             continue
 
-def walk_the_path(directory):
+def walk_the_path(valid_directory_path):
+    from os import walk
     valid_extension('What file extension would you like to use to narrow the search? ')
-    for root, subdirs, files in walk(directory):
+    for root, subdirs, files in walk(valid_directory_path):
         for file in files:
             if file.endswith(extension_limit):
                 path_walked[file] = root
@@ -120,7 +94,5 @@ def walk_the_path(directory):
 
 if __name__ == '__main__':
     file_path_titles = {}
-    mapped_title = {}
     path_walked = {}
-    arguments()
     main()
