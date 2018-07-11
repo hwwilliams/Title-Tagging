@@ -4,6 +4,7 @@ A script to embed title tags in video files. Currently only MP4 is supported.
 **Dependencies:** Python 3, [Mutagen](https://github.com/quodlibet/mutagen), and [Progress](https://github.com/verigak/progress/)
 
 Install Mutagen by running `pip install mutagen`
+
 Install Progress by running `pip install progress`
 
 ---
