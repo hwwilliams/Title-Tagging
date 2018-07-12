@@ -48,7 +48,7 @@ def check_titles(correct_tags_dictionary, merged_tags_dictionary):
     if int(len(correct_tags_dictionary.items())) >= 1:
         print(f'{len(correct_tags_dictionary.items())} file(s) successfully tagged.')
     if int(len(merged_tags_dictionary.items())) >= 1:
-        print(f'{bcolors.YELLOW}Found {len(merged_tags_dictionary.items())} file(s) with incorrect title tag(s){bcolors.RESET}.')
+        print(f'{bcolors.YELLOW}Found {len(merged_tags_dictionary.items())} file(s) with incorrect title tag{bcolors.RESET}.')
         for file_path, file_title in merged_tags_dictionary.items():
             print(f'{bcolors.YELLOW}Incorrect: Tag for "{file_path}" not successfully set.{bcolors.RESET}')
 
@@ -75,9 +75,9 @@ def fetch_titles(dictionary):
 
 def handling_tags(correct_tags_dictionary, merged_tags_dictionary):
     if int(len(correct_tags_dictionary.items())) >= 1:
-        print(f'Found {len(correct_tags_dictionary.items())} file(s) with correct title tag(s).')
+        print(f'Found {len(correct_tags_dictionary.items())} file(s) with correct title tag.')
     if int(len(merged_tags_dictionary.items())) >= 1:
-        print(f'Found {len(merged_tags_dictionary.items())} file(s) with incorrect title tag(s).')
+        print(f'Found {len(merged_tags_dictionary.items())} file(s) with incorrect title tag.')
         for file_path, file_title in merged_tags_dictionary.items():
             print(f'The title for "{file_path}" would be "{file_title}".')
         return True
