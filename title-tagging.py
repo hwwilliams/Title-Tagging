@@ -23,7 +23,7 @@ The most important part of this naming scheme is the last instance of '-' plus t
 period before the file extension. Whatever is between the last instance of '-' and the period will
 be the episode name, minus any leading or trailing white spaces.
 
-An example for the correct format of a file name is below:
+An example of the correct format of a file name is below:
 Full file name: Python 3 Tutorial for Beginners - S01E01 - Why Learn Python?.mp4
 Extracted title tag: Why Learn Python?
     ''', formatter_class=RawTextHelpFormatter)
@@ -69,7 +69,7 @@ def fetch_titles(dictionary):
     for file, root in dictionary.items():
         if ' - ' not in file:
             print(f'{bcolors.RED}Error: Video File "{join(root, file)}" is not named correctly.{bcolors.RESET}')
-            print(f'{bcolors.YELLOW}Run the script with "--help" to see an example of a correctly named file.{bcolors.RESET}')
+            print(f'{bcolors.YELLOW}Run the script with "--help" to see an example of the correct format of a file name.{bcolors.RESET}')
         else:
             valid_file_path_titles[join(root, file)] = ((file.split(' - '))[-1])[0:-((len(((file.split('.'))[-1]).strip())+1))].strip()
 

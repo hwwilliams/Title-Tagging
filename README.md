@@ -22,7 +22,7 @@ I use this to populate the metadata fields inside [Plex](https://www.plex.tv/) w
 
 ---
 
-### An example for the correct format of a file name is below
+### An example of the correct format of a file name is below
 
 **Full file name:** Python 3 Tutorial for Beginners - S01E01 - Why Learn Python?.mp4
 
