@@ -111,7 +111,7 @@ def sort_tags(dictionary):
                 correct_tags[file_path] = file_title
             elif file_title not in video_file.get(key='©nam'):
                 incorrect_tags[file_path] = file_title
-        elif '©nam' not in video_file.keys():
+        else:
             empty_tags[file_path] = file_title
     merged_empty_incorrect_tags.update(empty_tags)
     merged_empty_incorrect_tags.update(incorrect_tags)
