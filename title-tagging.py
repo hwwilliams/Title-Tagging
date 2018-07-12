@@ -161,7 +161,7 @@ def update_title_progress(tags_dictionary):
 def valid_extension(extension):
     valid_extension_list = ['mp4']
     while True:
-        extension_limit = str(input(extension)).strip()
+        extension_limit = (str(input(extension)).strip()).lower()
         if extension_limit in valid_extension_list:
             break
         else:
