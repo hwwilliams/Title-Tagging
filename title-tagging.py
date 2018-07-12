@@ -83,7 +83,7 @@ def fetch_titles(path_walked_dictionary):
             print(f'{bcolors.RED}Error: Video File "{os.path.join(root, file)}" is not named correctly.{bcolors.RESET}')
             print(f'{bcolors.YELLOW}Run the script with "--help" to see an example of the correct format of a file name.{bcolors.RESET}')
         else:
-            valid_titles[os.path.join(root, file)] = ((file.split(' - '))[-1])[0:-((len(((file.split('.'))[-1]).strip())+1))].strip()
+            valid_titles[os.path.join(root, file)] = (((file.split(' - '))[-1])[0:-((len(((file.split('.'))[-1]).strip())+1))].strip()).title()
     return valid_titles
 
 
