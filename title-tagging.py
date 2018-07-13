@@ -108,10 +108,8 @@ def main():
     if handling_tags(correct_tags, merged_tags):
         if confirm_save('Would you like to update the file(s) as shown above (Y/n)? '):
             update_title_progress(merged_tags)
-            correct_tags.clear()
-            incorrect_tags.clear()
-            empty_tags.clear()
-            merged_tags.clear()
+            for dict in [correct_tags, incorrect_tags, empty_tags, merged_tags]:
+                dict.clear()
             correct_tags, incorrect_tags, empty_tags, merged_tags = sort_tags(valid_titles)
             check_titles(correct_tags, merged_tags)
     terminate()
@@ -162,6 +160,8 @@ def valid_extension(extension):
     valid_extension_list = ['mp4']
     while True:
         extension_limit = (str(input(extension)).strip()).lower()
+        if extension_limit.startswith('.'):
+            extension_limit = extension_limit.replace('.', '', 1)
         if extension_limit in valid_extension_list:
             break
         else:
