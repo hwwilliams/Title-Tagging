@@ -87,15 +87,17 @@ def fetch_titles(path_walked_dictionary):
     return valid_titles
 
 
-def handling_tags(correct_tags_dictionary, merged_tags_dictionary):
-    if len(correct_tags_dictionary) >= 1:
-        print(f'Found {len(correct_tags_dictionary)} file(s) with correct title tag.')
+def handling_tags(merged_tags_dictionary, correct_tags_dictionary):
     if len(merged_tags_dictionary) >= 1:
-        print(f'Found {len(merged_tags_dictionary)} file(s) with incorrect title tag.')
         for file_path, file_title in merged_tags_dictionary.items():
             print(f'The title for "{file_path}" would be "{file_title}".')
+        print(f'Found {len(merged_tags_dictionary)} file(s) with incorrect title tag.')
+        if len(correct_tags_dictionary) >= 1:
+            print(f'Found {len(correct_tags_dictionary)} file(s) with correct title tag.')
         return True
     elif len(merged_tags_dictionary) == 0:
+        if len(correct_tags_dictionary) >= 1:
+            print(f'Found {len(correct_tags_dictionary)} file(s) with correct title tag.')
         return False
 
 
@@ -105,7 +107,7 @@ def main():
     path_walked = walk_the_path(search_directory)
     valid_titles = fetch_titles(path_walked)
     correct_tags, incorrect_tags, empty_tags, merged_tags = sort_tags(valid_titles)
-    if handling_tags(correct_tags, merged_tags):
+    if handling_tags(merged_tags, correct_tags):
         if confirm_save('Would you like to update the file(s) as shown above (Y/n)? '):
             update_title_progress(merged_tags)
             for dict in [correct_tags, incorrect_tags, empty_tags, merged_tags]:
