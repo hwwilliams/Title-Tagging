@@ -42,21 +42,20 @@ Extracted title tag: Why Learn Python?
 
 def check_path(directory_path):
     while True:
-        input_directory = str(input(directory_path)).strip()
+        input_directory = input(directory_path).strip()
         if input_directory.startswith('.\\'):
             input_directory = input_directory.replace('.\\', '', 1)
         search_directory = os.path.join((os.getcwd()), input_directory)
         if os.path.isdir(search_directory):
-            break
+            return search_directory
         else:
             print(f'{bcolors.YELLOW}Invalid Directory Path: Please enter a valid directory path.{bcolors.RESET}')
             continue
-    return search_directory
 
 
 def check_titles(correct_tags_dictionary, merged_tags_dictionary):
     if len(correct_tags_dictionary) >= 1:
-        print(f'{len(correct_tags_dictionary)} file(s) successfully tagged.')
+        print(f'{len(correct_tags_dictionary)} file(s) with correct tag(s).')
     if len(merged_tags_dictionary) >= 1:
         print(f'{bcolors.YELLOW}Found {len(merged_tags_dictionary)} file(s) with incorrect title tag{bcolors.RESET}.')
         for file_path, file_title in merged_tags_dictionary.items():
@@ -65,14 +64,12 @@ def check_titles(correct_tags_dictionary, merged_tags_dictionary):
 
 def confirm_save(confirmation):
     while True:
-        answer = (str(input(confirmation)).strip()).lower()
+        answer = (input(confirmation).strip()).lower()
         if answer == '' or answer.startswith('y'):
-            answer = 'yes'
+            return True
         elif answer.startswith('n'):
-            answer = 'no'
-        try:
-            return {'yes': True, 'no': False}[answer]
-        except KeyError:
+            return False
+        else:
             print(f'{bcolors.YELLOW}Invalid Input: Please enter yes or no.{bcolors.RESET}')
 
 
@@ -121,10 +118,10 @@ def main():
 def capitalize_title(title_string):
     ignore = {'a', 'an', 'and', 'as', 'at', 'but', 'by',
               'down', 'for', 'from', 'if', 'in', 'into',
-              'like', 'near', 'nor', 'off', 'on', 'once',
-              'onto', 'or', 'over', 'past', 'so', 'than',
-              'that', 'the', 'till', 'to', 'upon', 'vs',
-              'when', 'with', 'yet'}
+              'like', 'near', 'nor', 'of', 'off', 'on',
+              'once', 'onto', 'or', 'over', 'past', 'so',
+              'than', 'that', 'the', 'till', 'to', 'upon',
+              'vs', 'when', 'with', 'yet'}
     title = ''
     for word in title_string.split(' '):
         if word.lower() in ignore:
@@ -187,15 +184,14 @@ def update_title_progress(tags_dictionary):
 def valid_extension(extension):
     valid_extension_list = ['mp4']
     while True:
-        extension_limit = (str(input(extension)).strip()).lower()
+        extension_limit = (input(extension).strip()).lower()
         if extension_limit.startswith('.'):
             extension_limit = extension_limit.replace('.', '', 1)
         if extension_limit in valid_extension_list:
-            break
+            return extension_limit
         else:
             print(f'{bcolors.YELLOW}Invalid Input: Please enter one of the following supported extensions {valid_extension_list}.{bcolors.RESET}')
             continue
-    return extension_limit
 
 
 def walk_the_path(valid_directory_path):
