@@ -40,6 +40,31 @@ Extracted title tag: Why Learn Python?
     parser.parse_args()
 
 
+def capitalize_title(title_string):
+    ignore = {'a', 'an', 'and', 'as', 'at', 'but', 'by',
+              'down', 'for', 'from', 'if', 'in', 'into',
+              'like', 'near', 'nor', 'of', 'off', 'on',
+              'once', 'onto', 'or', 'over', 'past', 'so',
+              'than', 'that', 'the', 'till', 'to', 'upon',
+              'vs', 'when', 'with', 'yet'}
+    title = ''
+    for word in title_string.split(' '):
+        if word.lower() in ignore:
+            if word == title_string.split(' ')[0] or word == title_string.split(' ')[-1]:
+                if not word.isupper():
+                    if not (word.lower()).startswith('vs'):
+                        if not word.endswith('s') & (word.replace('s', '')).isupper():
+                            word = word.capitalize()
+            else:
+                word = word.lower()
+        elif not word.isupper():
+            if not (word.lower()).startswith('vs'):
+                if not word.endswith('s') & (word.replace('s', '')).isupper():
+                    word = word.capitalize()
+        title += str(f'{word} ')
+    return title
+
+
 def check_path(directory_path):
     while True:
         input_directory = input(directory_path).strip()
@@ -113,31 +138,6 @@ def main():
             correct_tags, incorrect_tags, empty_tags, merged_tags = sort_tags(valid_titles)
             check_titles(correct_tags, merged_tags)
     terminate()
-
-
-def capitalize_title(title_string):
-    ignore = {'a', 'an', 'and', 'as', 'at', 'but', 'by',
-              'down', 'for', 'from', 'if', 'in', 'into',
-              'like', 'near', 'nor', 'of', 'off', 'on',
-              'once', 'onto', 'or', 'over', 'past', 'so',
-              'than', 'that', 'the', 'till', 'to', 'upon',
-              'vs', 'when', 'with', 'yet'}
-    title = ''
-    for word in title_string.split(' '):
-        if word.lower() in ignore:
-            if word == title_string.split(' ')[0] or word == title_string.split(' ')[-1]:
-                if not word.isupper():
-                    if not (word.lower()).startswith('vs'):
-                        if not word.endswith('s') & (word.replace('s', '')).isupper():
-                            word = word.capitalize()
-            else:
-                word = word.lower()
-        elif not word.isupper():
-            if not (word.lower()).startswith('vs'):
-                if not word.endswith('s') & (word.replace('s', '')).isupper():
-                    word = word.capitalize()
-        title += str(f'{word} ')
-    return title
 
 
 def sort_tags(valid_titles_dictionary):
