@@ -83,7 +83,8 @@ def fetch_titles(path_walked_dictionary):
             print(f'{bcolors.RED}Error: Video File "{os.path.join(root, file)}" is not named correctly.{bcolors.RESET}')
             print(f'{bcolors.YELLOW}Run the script with "--help" to see an example of the correct format of a file name.{bcolors.RESET}')
         else:
-            valid_titles[os.path.join(root, file)] = (((file.split(' - '))[-1])[0:-((len(((file.split('.'))[-1]).strip())+1))].strip()).title()
+            title = capitalize_title((((file.split(' - '))[-1])[0:-((len(((file.split('.'))[-1]).strip())+1))].strip()))
+            valid_titles[os.path.join(root, file)] = title.strip()
     return valid_titles
 
 
@@ -115,6 +116,31 @@ def main():
             correct_tags, incorrect_tags, empty_tags, merged_tags = sort_tags(valid_titles)
             check_titles(correct_tags, merged_tags)
     terminate()
+
+
+def capitalize_title(title_string):
+    ignore = {'a', 'an', 'and', 'as', 'at', 'but', 'by',
+              'down', 'for', 'from', 'if', 'in', 'into',
+              'like', 'near', 'nor', 'off', 'on', 'once',
+              'onto', 'or', 'over', 'past', 'so', 'than',
+              'that', 'the', 'till', 'to', 'upon', 'vs',
+              'when', 'with', 'yet'}
+    title = ''
+    for word in title_string.split(' '):
+        if word.lower() in ignore:
+            if word == title_string.split(' ')[0] or word == title_string.split(' ')[-1]:
+                if not word.isupper():
+                    if not (word.lower()).startswith('vs'):
+                        if not word.endswith('s') & (word.replace('s', '')).isupper():
+                            word = word.capitalize()
+            else:
+                word = word.lower()
+        elif not word.isupper():
+            if not (word.lower()).startswith('vs'):
+                if not word.endswith('s') & (word.replace('s', '')).isupper():
+                    word = word.capitalize()
+        title += str(f'{word} ')
+    return title
 
 
 def sort_tags(valid_titles_dictionary):
