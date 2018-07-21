@@ -9,9 +9,10 @@ import sys
 
 
 class bcolors:
-    YELLOW = '\033[93m'
+    BOLD = '\033[1m'
     RED = '\033[91m'
     RESET = '\033[0m'
+    YELLOW = '\033[93m'
 
 
 def arguments():
@@ -33,11 +34,29 @@ of '-' plus the period before the file extension. Whatever is between
 the last instance of '-' and the period will be the episode name,
 minus any leading or trailing white spaces.
 
-An example of the correct format of a file name is below:
+Correct file name format is as follows.
+Example 1:
 File name: Python 3 Tutorial for Beginners - S01E01 - Why Learn Python?.mp4
+Extracted title tag: Why Learn Python?
+
+Example 2:
+File name: 01 - Why Learn Python?.mp4
 Extracted title tag: Why Learn Python?
     ''', formatter_class=argparse.RawTextHelpFormatter)
     parser.parse_args()
+
+
+def ask(confirmation):
+    while True:
+        answer = (input(confirmation).strip()).lower()
+        if answer == '' or answer.startswith('y'):
+            return True
+        elif answer.startswith('n'):
+            return False
+        elif answer == 'exit':
+            terminate()
+        else:
+            print(f'{bcolors.YELLOW}Invalid Input: Please enter yes or no.{bcolors.RESET}')
 
 
 def capitalize_title(title_string):
@@ -66,13 +85,20 @@ def capitalize_title(title_string):
 
 
 def check_path(directory_path):
+    search_directory_set = set([])
     while True:
-        input_directory = input(directory_path).strip()
-        if input_directory.startswith('.\\'):
-            input_directory = input_directory.replace('.\\', '', 1)
-        search_directory = os.path.join((os.getcwd()), input_directory)
-        if os.path.isdir(search_directory):
-            return search_directory
+        input_directory = input(directory_path)
+        if input_directory.lower() == 'exit':
+            terminate()
+        if (input_directory.strip()).startswith('.\\'):
+            input_directory = (input_directory.strip()).replace('.\\', '', 1)
+        input_directory = os.path.join((os.getcwd()), input_directory)
+        if os.path.isdir(input_directory):
+            search_directory_set.add(input_directory)
+            if ask('Would you like to add another directory to search? '):
+                continue
+            else:
+                return search_directory_set
         else:
             print(f'{bcolors.YELLOW}Invalid Directory Path: Please enter a valid directory path.{bcolors.RESET}')
             continue
@@ -87,15 +113,22 @@ def check_titles(correct_tags_dictionary, merged_tags_dictionary):
             print(f'{bcolors.YELLOW}Incorrect: Tag for "{file_path}" not successfully set.{bcolors.RESET}')
 
 
-def confirm_save(confirmation):
-    while True:
-        answer = (input(confirmation).strip()).lower()
-        if answer == '' or answer.startswith('y'):
-            return True
-        elif answer.startswith('n'):
-            return False
-        else:
-            print(f'{bcolors.YELLOW}Invalid Input: Please enter yes or no.{bcolors.RESET}')
+def example_info():
+    return f'''
+Correct file name format is as follows
+
+Example 1:
+File name: Python 3 Tutorial for Beginners - S01E01 - Why Learn Python?.mp4
+Extracted title tag: Why Learn Python?
+
+Example 2:
+File name: 01 - Why Learn Python?.mp4
+Extracted title tag: Why Learn Python?
+
+{bcolors.BOLD}Type "exit" at any prompt to exit the script{bcolors.RESET}
+
+For more information run the script with --help
+            '''
 
 
 def fetch_titles(path_walked_dictionary):
@@ -126,12 +159,13 @@ def handling_tags(merged_tags_dictionary, correct_tags_dictionary):
 
 def main():
     arguments()
-    search_directory = check_path('Which directory would you like to search (recursively)? ')
-    path_walked = walk_the_path(search_directory)
+    print(example_info())
+    search_directory_set = check_path('Which directory would you like to search (recursively)? ')
+    path_walked = walk_the_path(search_directory_set)
     valid_titles = fetch_titles(path_walked)
     correct_tags, incorrect_tags, empty_tags, merged_tags = sort_tags(valid_titles)
     if handling_tags(merged_tags, correct_tags):
-        if confirm_save('Would you like to update the file(s) as shown above (Y/n)? '):
+        if ask('Would you like to update the file(s) as shown above (Y/n)? '):
             update_title_progress(merged_tags)
             for dict in [correct_tags, incorrect_tags, empty_tags, merged_tags]:
                 dict.clear()
@@ -185,6 +219,8 @@ def valid_extension(extension):
     valid_extension_list = ['mp4']
     while True:
         extension_limit = (input(extension).strip()).lower()
+        if extension_limit == 'exit':
+            terminate()
         if extension_limit.startswith('.'):
             extension_limit = extension_limit.replace('.', '', 1)
         if extension_limit in valid_extension_list:
@@ -194,13 +230,14 @@ def valid_extension(extension):
             continue
 
 
-def walk_the_path(valid_directory_path):
+def walk_the_path(valid_directory_set):
     path_walked = {}
     extension_limit = valid_extension('What file extension would you like to use to narrow the search? ')
-    for root, subdirs, files in os.walk(valid_directory_path):
-        for file in files:
-            if file.endswith(extension_limit):
-                path_walked[file] = root
+    for valid_dir in valid_directory_set:
+        for root, subdirs, files in os.walk(valid_dir):
+            for file in files:
+                if file.endswith(extension_limit):
+                    path_walked[file] = root
     if len(path_walked) == 0:
         print(f'{bcolors.YELLOW}No files found when searching for files ending with ".{extension_limit}".{bcolors.RESET}')
         terminate()
