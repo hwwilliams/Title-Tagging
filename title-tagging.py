@@ -46,10 +46,12 @@ Extracted title tag: Why Learn Python?
     parser.parse_args()
 
 
-def ask(confirmation):
+def ask(confirmation, default_answer_no=False):
     while True:
         answer = (input(confirmation).strip()).lower()
-        if answer == '' or answer.startswith('y'):
+        if default_answer_no and answer == '':
+            return False
+        elif answer == '' or answer.startswith('y'):
             return True
         elif answer.startswith('n'):
             return False
@@ -65,21 +67,19 @@ def capitalize_title(title_string):
               'like', 'near', 'nor', 'of', 'off', 'on',
               'once', 'onto', 'or', 'over', 'past', 'so',
               'than', 'that', 'the', 'till', 'to', 'upon',
-              'vs', 'when', 'with', 'yet'}
+              'v', 'v.', 'vs', 'vs.', 'when', 'with', 'yet'}
     title = ''
     for word in title_string.split(' '):
         if word.lower() in ignore:
             if word == title_string.split(' ')[0] or word == title_string.split(' ')[-1]:
                 if not word.isupper():
-                    if not (word.lower()).startswith('vs'):
-                        if not word.endswith('s') & (word.replace('s', '')).isupper():
-                            word = word.capitalize()
+                    if not word.endswith('s') & (word.replace('s', '')).isupper():
+                        word = word.capitalize()
             else:
                 word = word.lower()
         elif not word.isupper():
-            if not (word.lower()).startswith('vs'):
-                if not word.endswith('s') & (word.replace('s', '')).isupper():
-                    word = word.capitalize()
+            if not word.endswith('s') & (word.replace('s', '')).isupper():
+                word = word.capitalize()
         title += str(f'{word} ')
     return title
 
@@ -95,7 +95,7 @@ def check_path(directory_path):
         input_directory = os.path.join((os.getcwd()), input_directory)
         if os.path.isdir(input_directory):
             search_directory_set.add(input_directory)
-            if ask('Would you like to add another directory to search? '):
+            if ask('Would you like to add another directory to search (y/N)? ', True):
                 continue
             else:
                 return search_directory_set
