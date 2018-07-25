@@ -46,9 +46,9 @@ Extracted title tag: Why Learn Python?
     parser.parse_args()
 
 
-def ask(confirmation, default_answer_no=False):
+def ask(confirmation_prompt, default_answer_no=False):
     while True:
-        answer = (input(confirmation).strip()).lower()
+        answer = (input(confirmation_prompt).strip()).lower()
         if default_answer_no and answer == '':
             return False
         elif answer == '' or answer.startswith('y'):
@@ -84,10 +84,10 @@ def capitalize_title(title_string):
     return title
 
 
-def check_path(directory_path):
+def check_path(directory_path_prompt):
     search_directory_set = set([])
     while True:
-        input_directory = input(directory_path)
+        input_directory = input(directory_path_prompt)
         if input_directory.lower() == 'exit':
             terminate()
         if (input_directory.strip()).startswith('.\\'):
@@ -215,10 +215,10 @@ def update_title_progress(tags_dictionary):
     bar.finish()
 
 
-def valid_extension(extension):
+def valid_extension(extension_prompt):
     valid_extension_list = ['mp4']
     while True:
-        extension_limit = (input(extension).strip()).lower()
+        extension_limit = (input(extension_prompt).strip()).lower()
         if extension_limit == 'exit':
             terminate()
         if extension_limit.startswith('.'):
