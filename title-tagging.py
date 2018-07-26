@@ -49,12 +49,10 @@ Extracted title tag: Why Learn Python?
 def ask(confirmation_prompt, default_answer_no=False):
     while True:
         answer = (input(confirmation_prompt).strip()).lower()
-        if default_answer_no and answer == '':
+        if default_answer_no and answer == '' or answer.startswith('n'):
             return False
         elif answer == '' or answer.startswith('y'):
             return True
-        elif answer.startswith('n'):
-            return False
         elif answer == 'exit':
             terminate()
         else:
