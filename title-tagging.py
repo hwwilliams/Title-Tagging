@@ -77,7 +77,8 @@ def capitalize_title(title_string):
                 word = word.lower()
         elif not word.isupper():
             if not word.endswith('s') & (word.replace('s', '')).isupper():
-                word = word.capitalize()
+                if not (word.lower()).startswith('ipv'):
+                    word = word.capitalize()
         title += str(f'{word} ')
     return title
 
