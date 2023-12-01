@@ -129,86 +129,22 @@ def walk_the_path(valid_directory_set):
         return path_walked
 
 
-def capitalize_title(title_string):
-    ignore = {
-        "a",
-        "an",
-        "and",
-        "as",
-        "at",
-        "but",
-        "by",
-        "down",
-        "for",
-        "from",
-        "if",
-        "in",
-        "into",
-        "like",
-        "near",
-        "nor",
-        "of",
-        "off",
-        "on",
-        "once",
-        "onto",
-        "or",
-        "over",
-        "past",
-        "so",
-        "than",
-        "that",
-        "the",
-        "till",
-        "to",
-        "upon",
-        "v",
-        "v.",
-        "vs",
-        "vs.",
-        "when",
-        "with",
-        "yet",
-    }
-    title = ""
-    for word in title_string.split(" "):
-        if word.lower() in ignore:
-            if (
-                word == title_string.split(" ")[0]
-                or word == title_string.split(" ")[-1]
-            ):
-                if not word.isupper():
-                    if not word.endswith("s") & (word.replace("s", "")).isupper():
-                        word = word.capitalize()
-            else:
-                word = word.lower()
-        elif not word.isupper():
-            if not word.endswith("s") & (word.replace("s", "")).isupper():
-                if not (word.lower()).startswith("ipv"):
-                    word = word.capitalize()
-        title += str(f"{word} ")
-    return title
-
-
 def fetch_titles(path_walked_dictionary):
     valid_titles = {}
-    for file, root in path_walked_dictionary.items():
-        if " - " not in file:
+    for file_name, root in path_walked_dictionary.items():
+        if " - " not in file_name:
             print(
-                f'{bcolors.RED}Error: Video File "{os.path.join(root, file)}" is not named correctly.{bcolors.RESET}'
+                f'{bcolors.RED}Error: Video file "{os.path.join(root, file_name)}" is not named correctly.{bcolors.RESET}'
             )
             print(
                 f'{bcolors.YELLOW}Run the script with "--help" to see an example of the correct format of a file name.{bcolors.RESET}'
             )
         else:
-            title = capitalize_title(
-                (
-                    ((file.split(" - "))[-1])[
-                        0 : -((len(((file.split("."))[-1]).strip()) + 1))
-                    ].strip()
-                )
+            file_extension = os.path.splitext(file_name)[-1]
+            file_title = (
+                file_name.removesuffix(file_extension).split("-")[-1].strip().title()
             )
-            valid_titles[os.path.join(root, file)] = title.strip()
+            valid_titles[os.path.join(root, file_name)] = file_title
     return valid_titles
 
 
@@ -302,8 +238,7 @@ def main():
     search_directory_set = check_path(
         "Which directory would you like to search (recursively)? "
     )
-    path_walked = walk_the_path(search_directory_set)
-    valid_titles = fetch_titles(path_walked)
+    valid_titles = fetch_titles(walk_the_path(search_directory_set))
     correct_tags, incorrect_tags, empty_tags, merged_tags = sort_tags(valid_titles)
     if handling_tags(merged_tags, correct_tags):
         if ask("Would you like to update the file(s) as shown above (Y/n)? "):
