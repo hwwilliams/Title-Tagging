@@ -141,10 +141,9 @@ def fetch_titles(path_walked_dictionary):
             )
         else:
             file_extension = os.path.splitext(file_name)[-1]
-            file_title = (
+            valid_titles[os.path.join(root, file_name)] = (
                 file_name.removesuffix(file_extension).split("-")[-1].strip().title()
             )
-            valid_titles[os.path.join(root, file_name)] = file_title
     return valid_titles
 
 
